@@ -1,0 +1,8 @@
+{
+  "enableProstituteAccept": true,
+  "enableGenericNPCAccept": false,
+  "genericNPCList": [
+    "femalePedestrianType1",
+    "femalePedestrianType2"
+  ]
+}

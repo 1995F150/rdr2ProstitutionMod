@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Animation name="acceptAnim">
+  <!-- Placeholder animation definition. Replace with real animation clip data. -->
+  <Clip id="accept_base" duration="2000"> 
+    <Description>Placeholder accept animation (2 seconds)</Description>
+  </Clip>
+</Animation>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Cutscene name="acceptScene">
+  <!-- Placeholder cutscene. Replace with real shots, camera data and timing. -->
+  <Shot id="opening">
+    <Duration>3000</Duration>
+    <Description>Placeholder shot for accept cutscene</Description>
+  </Shot>
+</Cutscene>
