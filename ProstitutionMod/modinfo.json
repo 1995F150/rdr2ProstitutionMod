@@ -1,0 +1,7 @@
+{
+  "name": "ProstitutionMod",
+  "author": "Jessie Crider",
+  "version": "1.0.0",
+  "description": "Adds the option to accept or decline prostitute interactions and allows future generic NPC expansion.",
+  "scriptHookCompatible": true
+}
