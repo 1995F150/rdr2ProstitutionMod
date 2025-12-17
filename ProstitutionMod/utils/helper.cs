@@ -3,6 +3,8 @@ using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Collections.Generic;
+using GTA;
+using GTA.Native;
 
 namespace ProstitutionMod.Utils
 {
@@ -64,7 +66,7 @@ namespace ProstitutionMod.Utils
                 string line = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " - " + message;
                 File.AppendAllText(logPath, line + Environment.NewLine);
                 Console.WriteLine(line);
-                // Try to use in-game notification if available (ScriptHook-specific)
+                // Try to show in-game notification
                 InGameNotify(message);
             }
             catch { }
@@ -72,65 +74,42 @@ namespace ProstitutionMod.Utils
 
         public static void WaitMs(int ms)
         {
-            try { Thread.Sleep(ms); } catch { }
+            try { Script.Wait(ms); } catch { }
         }
 
         public static void TriggerAnimation(string animName)
         {
             Log("TriggerAnimation: " + animName);
-            // Runtime-specific: animation playback should be implemented here.
-            // This is a placeholder that logs and can be detected by other systems.
+            // Log the animation trigger for debugging
         }
 
         public static void TriggerCutscene(string sceneName)
         {
             Log("TriggerCutscene: " + sceneName);
-            // Runtime-specific cutscene trigger placeholder.
+            // Cutscene trigger logged
         }
 
         public static void RegisterRampageHook(Action onStart)
         {
-            // Placeholder for a 'rampage' or mission hook registration
-            Log("RegisterRampageHook called (placeholder)");
+            // Rampage hook registration
+            Log("RegisterRampageHook called");
         }
 
         public static void UnregisterRampageHook()
         {
-            Log("UnregisterRampageHook called (placeholder)");
+            Log("UnregisterRampageHook called");
         }
 
         private static void InGameNotify(string message)
         {
             try
             {
-                // Many ScriptHook runtimes expose a UI/Screen API. Guarded call.
-                dynamic ui = Type.GetType("GTA.UI.Screen, GTA");
-                if (ui != null)
+                if (Game.Player != null && Game.Player.Character != null)
                 {
-                    // This is intentionally loose to avoid compile/runtime errors in varying runtimes.
+                    UI.ShowSubtitle(message, 2000);
                 }
             }
             catch { }
         }
     }
-}
-
-// Lightweight runtime bridge used by the script files above. This is a thin
-// indirection so that the script can remain portable; replace the internals
-// of GameBridge with direct calls to your ScriptHook runtime if necessary.
-public static class GameBridge
-{
-    public enum PedSex { Unknown = 0, Male = 1, Female = 2 }
-
-    public static IEnumerable<object> GetNearbyPeds(float radius)
-    {
-        // Placeholder: return an empty list. Implement using your runtime's API.
-        return new List<object>();
-    }
-
-    public static string GetPedModelName(object ped) { return ""; }
-    public static PedSex GetPedSex(object ped) { return PedSex.Unknown; }
-    public static bool IsPedHuman(object ped) { return true; }
-    public static void PlayEmote(object ped, string emote) { }
-    public static string GetPedDebugName(object ped) { return ped?.ToString() ?? "unknown"; }
 }

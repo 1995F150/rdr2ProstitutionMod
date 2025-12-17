@@ -4,6 +4,7 @@ using GTA.Math;
 using GTA.Native;
 using ProstitutionMod.NPC;
 using ProstitutionMod.Utils;
+using ProstitutionMod.Cutscenes;
 
 public class Main : Script
 {
@@ -17,6 +18,9 @@ public class Main : Script
     {
         try
         {
+            // Cutscene system per-frame updates
+            AcceptScene.OnTick();
+
             // Check for LT + D-Pad Right (Accept)
             bool ltHeld = Game.IsControlPressed(Control.TakeScreenshot) || Function.Call<bool>(Hash.GET_CONTROL_NORMAL, 2, 174);
             bool dpadRight = Game.IsControlJustPressed(Control.VehicleSelectNextWeapon) || Function.Call<bool>(Hash.GET_CONTROL_NORMAL, 2, 175);
