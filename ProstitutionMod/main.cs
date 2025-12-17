@@ -1,40 +1,45 @@
 using System;
-using System.Windows.Forms;
+using GTA;
+using GTA.Math;
+using GTA.Native;
 using ProstitutionMod.NPC;
 using ProstitutionMod.Utils;
 
-// NOTE: ScriptHook base class namespace can vary by runtime. If your ScriptHook uses
-// a different base class, replace `ScriptHook::Script` with the appropriate one (e.g., Script).
-public class Main : ScriptHook::Script
+public class Main : Script
 {
-    private bool lDown = false;
-
     public Main()
     {
         Tick += OnTick;
-        KeyDown += OnKeyDown;
-        KeyUp += OnKeyUp;
         Helper.Log("ProstitutionMod initializing...");
-    }
-
-    private void OnKeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.KeyCode == Keys.L) lDown = true;
-        if (e.KeyCode == Keys.T && lDown)
-        {
-            Helper.Log("L+T pressed — invoking NPC interaction");
-            NPCHandler.HandleInteraction();
-        }
-    }
-
-    private void OnKeyUp(object sender, KeyEventArgs e)
-    {
-        if (e.KeyCode == Keys.L) lDown = false;
     }
 
     private void OnTick(object sender, EventArgs e)
     {
-        // Periodic background checks (non-blocking, fast)
-        NPCHandler.CheckNearbyProstitutes();
+        try
+        {
+            // Check for LT + D-Pad Right (Accept)
+            bool ltHeld = Game.IsControlPressed(Control.TakeScreenshot) || Function.Call<bool>(Hash.GET_CONTROL_NORMAL, 2, 174);
+            bool dpadRight = Game.IsControlJustPressed(Control.VehicleSelectNextWeapon) || Function.Call<bool>(Hash.GET_CONTROL_NORMAL, 2, 175);
+            
+            if (ltHeld && dpadRight)
+            {
+                Helper.Log("LT + DPad Right detected — Accept");
+                NPCHandler.AcceptInteraction();
+            }
+
+            // Check for B button (Decline) - FrontendCancel is B/Circle
+            if (Game.IsControlJustPressed(Control.FrontendCancel))
+            {
+                Helper.Log("B button detected — Decline");
+                NPCHandler.DeclineInteraction();
+            }
+
+            // Periodic background checks (non-blocking, fast)
+            NPCHandler.CheckNearbyProstitutes();
+        }
+        catch (Exception ex)
+        {
+            Helper.Log("Error in OnTick: " + ex.Message);
+        }
     }
 }
